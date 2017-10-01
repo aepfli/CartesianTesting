@@ -15,7 +15,14 @@
 
 package at.schrottner.testing.cartesianTesting.strategy;
 
+import at.schrottner.testing.cartesianTesting.service.SomeService;
+
+import javax.annotation.Resource;
+
 public abstract class AbstractStrategy<T extends Object> {
+
+    @Resource
+    private SomeService someService;
 
     Class<T> type;
 
@@ -36,6 +43,11 @@ public abstract class AbstractStrategy<T extends Object> {
     }
 
     public String addToString(T input) {
+        // a Block to verify Dependency Injection
+        if(someService != null) {
+            someService.someMethod();
+        }
+
         if(isApplicable(input)) {
             return addToStringInternal(input);
         }
@@ -47,5 +59,9 @@ public abstract class AbstractStrategy<T extends Object> {
     @Override
     public String toString() {
         return this.getClass().getSimpleName();
+    }
+
+    public void setSomeService(SomeService someService) {
+        this.someService = someService;
     }
 }
